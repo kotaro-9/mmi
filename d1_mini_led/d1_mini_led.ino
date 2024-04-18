@@ -1,56 +1,65 @@
-#include "ESP8266WiFi.h"
+#include <ESP8266WiFi.h>
+#include <PubSubCLient.h>
 
-int pinRed = 5;
-int pinGreen = 4;
-int pinBlue = 0;
+const char[] ssid = "BKO-IoT";
+const char[] password = "Kingb3rdingMMI";
+const char[] mqtt_server = "";
+const char[] topic = "";
+
+WiFiClient espClient;
+MqttCLient cLient(espClient);
+
+const int pinRed = 5;
+const int pinGreen = 4;
+const int pinBlue = 0;
+
 
 void setup() {
     Serial.begin(9600);
-
-    // WiFi Setup
-    WiFi.mode(WIFI_STA); // WiFi-Modus: Station; verbindet sich mit vorhandenen WiFi-Netzwerk
-    WiFi.disconnect(); // Trenne Verbindung zu aktuellen WiFi-Netzwerk
-    delay(100); // Verzoegerung um sicherzustellen, dass Trennung abgeschlossen ist
-
-    Serial.println("WiFi Setup fertig");
 
     // LED Setup
     pinMode(pinRed, OUTPUT);
     pinMode(pinGreen, OUTPUT);
     pinMode(pinBlue, OUTPUT);
-    Serial.println("Pins Setup fertig");
+
+    setup_wifi();
+    client.setServer(mqtt_server, 1883)
+    client.setCallback(update_led);
 }
+
 
 void loop() {
-    Serial.println("WiFi Scan gestartet");
-
-    int foundNetworks = WiFi.scanNetworks(); // Anzahl der gefundenen Netzwerke
-    Serial.prinln("WiFi Scan abgeschlossen");
-
-    if (foundNetworks == 0) {
-        Serial.println("Keine WiFi-Netzwerke gefunden");
-    } else {
-        Serial.print(foundNetworks);
-
-        // Ausgabe von SSID und RSSI von jedem Netzwerk
-        for (int i = 0; i < foundNetworks; ++i) {
-        Serial.print(++i);
-        Serial.print(": ");
-        Serial.print(WiFi.SSID(i));
-        Serial.print(" (");
-        Serial.print(WiFi.RSSI(i));
-        Serial.print(")");
-        Serial.println((WiFi.encryptionType(i) == ENC_TYPE_NONE) ? " " : "*");
-        delay(10);
-        }
+    if (!client.connected()) {
+        reconnect_wifi();
     }
-  
-    Serial.print("");
-
-    delay(5000); // Verzoegerung vor naechstem Scan
+    client.loop();
 }
 
 
+void setup_wifi() {
+    WiFi.begin(ssid, password);
+    while (WiFi.status() != WL_CONNECTED) {
+        delay(500);
+    }
+}
+
+
+void reconnect_wifi() {
+    while (!client.connected()) {
+        if (client.connect("ESP8266Client")) {
+            client.subscribe(topic);
+        } else {
+            delay(5000);
+        }
+    }
+}
+
+
+void update_led() {
+    digitalWrite(pinRed, 45);
+    digitalWrite(pinGreen, 114);
+    digitalWrite(pinBlue, 20);
+}
 
 
 
