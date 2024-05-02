@@ -62,5 +62,6 @@ void update_led() {
 }
 
 
-
 // https://znil.net/index.php/ESP8266_Wemos_D1_Mini_mit_RGB-LED_Beispiel
+// 1x (5V-1,95V)/20mA=152.5 Ohm
+// 2x (5V-3,3V)/20mA=85 Ohm
