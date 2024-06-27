@@ -9,9 +9,9 @@ const char[] topic = "";
 WiFiClient espClient;
 MqttCLient cLient(espClient);
 
-const int pinRed = 5;
-const int pinGreen = 4;
-const int pinBlue = 0;
+const int pinRed = D5;
+const int pinGreen = D4;
+const int pinBlue = D0; 
 
 
 void setup() {
@@ -33,6 +33,12 @@ void loop() {
         reconnect_wifi();
     }
     client.loop();
+
+    analogWrite(pinRed, 45);
+    analogWrite(pinGreen, 114);
+    analogWrite(pinBlue, 20);
+
+    delay(3000);
 }
 
 
@@ -54,12 +60,6 @@ void reconnect_wifi() {
     }
 }
 
-
-void update_led() {
-    digitalWrite(pinRed, 45);
-    digitalWrite(pinGreen, 114);
-    digitalWrite(pinBlue, 20);
-}
 
 
 // https://znil.net/index.php/ESP8266_Wemos_D1_Mini_mit_RGB-LED_Beispiel
