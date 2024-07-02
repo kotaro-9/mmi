@@ -1,2 +1,2 @@
 # MMI
-> MMI Projekte
+> Projekte aus dem MMI-Unterricht
